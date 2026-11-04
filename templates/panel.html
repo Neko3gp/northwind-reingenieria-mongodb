@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Panel{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Panel</h1><p>Resumen general del negocio</p></div>
+  <a class="btn" href="{{ url_for('pedido_nuevo') }}">Nuevo pedido</a>
+</div>
+
+<div class="stats">
+  <div class="stat"><span>Ventas totales</span><b class="num">{{ ventas | dinero }}</b></div>
+  <div class="stat"><span>Pedidos</span><b class="num">{{ n_pedidos }}</b></div>
+  <div class="stat"><span>Clientes</span><b class="num">{{ n_clientes }}</b></div>
+  <div class="stat"><span>Productos</span><b class="num">{{ n_productos }}</b></div>
+</div>
+
+<div class="dos-col">
+  <div class="card">
+    <h2>Productos más vendidos</h2>
+    {% for t in top_productos %}
+    <div class="barra">
+      <div class="fila"><span>{{ t._id }}</span><b>{{ t.importe | dinero }}</b></div>
+      <div class="pista"><div class="relleno" style="width: {{ (t.importe / top_productos[0].importe * 100) | round }}%"></div></div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="card">
+    <h2>Ventas por país de envío</h2>
+    {% for t in por_pais %}
+    <div class="barra">
+      <div class="fila"><span>{{ t._id }}</span><b>{{ t.importe | dinero }}</b></div>
+      <div class="pista"><div class="relleno" style="width: {{ (t.importe / por_pais[0].importe * 100) | round }}%"></div></div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>Pedidos recientes</h2>
+  <table class="tabla">
+    <thead><tr><th>Pedido</th><th>Cliente</th><th>Fecha</th><th class="der">Total</th></tr></thead>
+    <tbody>
+      {% for p in recientes %}
+      <tr>
+        <td><a href="{{ url_for('pedido', oid=p._id) }}">#{{ p._id }}</a></td>
+        <td>{{ p.cliente_nombre }}</td>
+        <td class="suave">{{ p.fecha }}</td>
+        <td class="der">{{ p.total | dinero }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

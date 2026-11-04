@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_paginas.html" import paginas %}
+{% block titulo %}Clientes{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Clientes</h1><p>Empresas que compran a Northwind</p></div>
+  <a class="btn" href="{{ url_for('cliente_form') }}">Nuevo cliente</a>
+</div>
+
+<form class="busqueda" method="get">
+  <input name="q" value="{{ q }}" placeholder="Buscar por empresa, contacto, ciudad o país">
+  <button class="btn claro">Buscar</button>
+</form>
+
+<div class="card">
+  <table class="tabla">
+    <thead><tr><th>Empresa</th><th>Contacto</th><th>Ciudad</th><th>País</th><th></th></tr></thead>
+    <tbody>
+      {% for c in docs %}
+      <tr>
+        <td><b>{{ c.empresa }}</b></td>
+        <td>{{ c.contacto or '' }}<div class="suave">{{ c.cargo or '' }}</div></td>
+        <td>{{ c.ciudad or '' }}</td>
+        <td>{{ c.pais or '' }}</td>
+        <td class="acciones">
+          <a class="btn claro chico" href="{{ url_for('cliente_form', cid=c._id) }}">Editar</a>
+          <form method="post" action="{{ url_for('cliente_eliminar', cid=c._id) }}" onsubmit="return confirm('¿Eliminar a {{ c.empresa | e }}?')">
+            <button class="btn peligro chico">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="suave">Sin resultados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ paginas(pag, q, 'clientes') }}
+{% endblock %}

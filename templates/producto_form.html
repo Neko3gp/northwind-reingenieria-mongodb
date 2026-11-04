@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if producto._id else 'Nuevo' }} producto{% endblock %}
+{% block contenido %}
+<div class="encabezado"><h1>{{ 'Editar producto' if producto._id else 'Nuevo producto' }}</h1></div>
+
+<div class="card">
+  <form method="post" class="formulario">
+    <div class="ancho"><label>Nombre *</label><input name="nombre" value="{{ producto.nombre or '' }}" required></div>
+    <div>
+      <label>Categoría *</label>
+      <select name="categoria" required>
+        <option value="">Selecciona…</option>
+        {% for c in categorias %}<option {{ 'selected' if producto.categoria and producto.categoria.nombre == c.nombre }}>{{ c.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Proveedor *</label>
+      <select name="proveedor" required>
+        <option value="">Selecciona…</option>
+        {% for s in proveedores %}<option {{ 'selected' if producto.proveedor and producto.proveedor.nombre == s.nombre }}>{{ s.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div><label>Presentación</label><input name="cantidad_por_unidad" value="{{ producto.cantidad_por_unidad or '' }}" placeholder="Ej. 24 botellas de 355 ml"></div>
+    <div><label>Precio</label><input name="precio" type="number" step="0.01" min="0" value="{{ producto.precio if producto.precio is not none else '' }}"></div>
+    <div><label>Existencias</label><input name="existencias" type="number" min="0" value="{{ producto.existencias if producto.existencias is not none else '' }}"></div>
+    <div style="align-self:end"><label class="check"><input type="checkbox" name="descontinuado" {{ 'checked' if producto.descontinuado }}> Descontinuado</label></div>
+    <div class="botones ancho">
+      <button class="btn">Guardar</button>
+      <a class="btn claro" href="{{ url_for('productos') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

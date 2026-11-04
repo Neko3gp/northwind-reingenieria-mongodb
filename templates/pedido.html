@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Pedido #{{ p._id }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Pedido #{{ p._id }}</h1><p>{{ p.cliente_nombre }} · {{ p.fecha }}</p></div>
+  <a class="btn claro" href="{{ url_for('pedidos') }}">← Volver</a>
+</div>
+
+<div class="card">
+  <div class="detalle">
+    <div><span>Atendió</span>{% if empleado %}{{ empleado.nombre }} {{ empleado.apellido }}{% else %}—{% endif %}</div>
+    <div><span>Transportista</span>{{ p.transportista }}</div>
+    <div><span>Enviado</span>{{ p.fecha_envio or 'Pendiente' }}</div>
+    <div><span>Destino</span>{{ p.envio.ciudad or '' }}, {{ p.envio.pais or '' }}</div>
+    <div><span>Dirección</span>{{ p.envio.direccion or '—' }}</div>
+    <div><span>Fecha requerida</span>{{ p.fecha_requerida or '—' }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Productos del pedido</h2>
+  <table class="tabla">
+    <thead><tr><th>Producto</th><th class="der">Precio</th><th class="der">Cantidad</th><th class="der">Descuento</th><th class="der">Importe</th></tr></thead>
+    <tbody>
+      {% for l in p.detalles %}
+      <tr>
+        <td>{{ l.producto }}</td>
+        <td class="der">{{ l.precio | dinero }}</td>
+        <td class="der">{{ l.cantidad }}</td>
+        <td class="der">{{ (l.descuento * 100) | round | int }}%</td>
+        <td class="der">{{ (l.precio * l.cantidad * (1 - l.descuento)) | dinero }}</td>
+      </tr>
+      {% endfor %}
+      <tr><td colspan="4" class="der suave">Flete</td><td class="der">{{ p.flete | dinero }}</td></tr>
+      <tr class="total-fila"><td colspan="4" class="der">Total del pedido</td><td class="der">{{ p.total | dinero }}</td></tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

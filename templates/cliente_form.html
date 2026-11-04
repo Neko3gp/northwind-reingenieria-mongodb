@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if cliente._id else 'Nuevo' }} cliente{% endblock %}
+{% block contenido %}
+<div class="encabezado"><h1>{{ 'Editar cliente' if cliente._id else 'Nuevo cliente' }}</h1></div>
+
+<div class="card">
+  <form method="post" class="formulario">
+    <div class="ancho"><label>Empresa *</label><input name="empresa" value="{{ cliente.empresa or '' }}" required></div>
+    <div><label>Contacto</label><input name="contacto" value="{{ cliente.contacto or '' }}"></div>
+    <div><label>Cargo</label><input name="cargo" value="{{ cliente.cargo or '' }}"></div>
+    <div class="ancho"><label>Dirección</label><input name="direccion" value="{{ cliente.direccion or '' }}"></div>
+    <div><label>Ciudad</label><input name="ciudad" value="{{ cliente.ciudad or '' }}"></div>
+    <div><label>Región</label><input name="region" value="{{ cliente.region or '' }}"></div>
+    <div><label>Código postal</label><input name="cp" value="{{ cliente.cp or '' }}"></div>
+    <div><label>País</label><input name="pais" value="{{ cliente.pais or '' }}"></div>
+    <div><label>Teléfono</label><input name="telefono" value="{{ cliente.telefono or '' }}"></div>
+    <div class="botones ancho">
+      <button class="btn">Guardar</button>
+      <a class="btn claro" href="{{ url_for('clientes') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

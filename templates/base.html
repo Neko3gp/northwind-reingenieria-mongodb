@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Northwind{% endblock %} · Northwind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+  <aside class="lateral">
+    <div class="marca">Northwind<small>Comercio de alimentos</small></div>
+    <nav>
+      {% set ep = request.endpoint or '' %}
+      <a href="{{ url_for('panel') }}" class="{{ 'activo' if ep == 'panel' }}">Panel</a>
+      <a href="{{ url_for('pedidos') }}" class="{{ 'activo' if ep.startswith('pedido') }}">Pedidos</a>
+      <a href="{{ url_for('clientes') }}" class="{{ 'activo' if ep.startswith('cliente') }}">Clientes</a>
+      <a href="{{ url_for('productos') }}" class="{{ 'activo' if ep.startswith('producto') }}">Productos</a>
+    </nav>
+  </aside>
+  <main>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% for tipo, texto in mensajes %}<div class="aviso {{ tipo }}">{{ texto }}</div>{% endfor %}
+    {% endwith %}
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

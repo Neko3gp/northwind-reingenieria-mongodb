@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_paginas.html" import paginas %}
+{% block titulo %}Pedidos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Pedidos</h1><p>Cada pedido guarda sus productos dentro del mismo documento</p></div>
+  <a class="btn" href="{{ url_for('pedido_nuevo') }}">Nuevo pedido</a>
+</div>
+
+<form class="busqueda" method="get">
+  <input name="q" value="{{ q }}" placeholder="Buscar por número, cliente, país o transportista">
+  <button class="btn claro">Buscar</button>
+</form>
+
+<div class="card">
+  <table class="tabla">
+    <thead><tr><th>Pedido</th><th>Cliente</th><th>Fecha</th><th>Envío</th><th class="der">Total</th><th></th></tr></thead>
+    <tbody>
+      {% for p in docs %}
+      <tr>
+        <td><a href="{{ url_for('pedido', oid=p._id) }}"><b>#{{ p._id }}</b></a></td>
+        <td>{{ p.cliente_nombre }}</td>
+        <td class="suave">{{ p.fecha }}</td>
+        <td>{{ p.envio.pais }}<div class="suave">{{ p.transportista }}</div></td>
+        <td class="der">{{ p.total | dinero }}</td>
+        <td class="acciones">
+          <a class="btn claro chico" href="{{ url_for('pedido', oid=p._id) }}">Ver</a>
+          <form method="post" action="{{ url_for('pedido_eliminar', oid=p._id) }}" onsubmit="return confirm('¿Eliminar el pedido #{{ p._id }}?')">
+            <button class="btn peligro chico">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="suave">Sin resultados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ paginas(pag, q, 'pedidos') }}
+{% endblock %}

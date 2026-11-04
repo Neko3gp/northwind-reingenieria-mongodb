@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo pedido{% endblock %}
+{% block contenido %}
+<div class="encabezado"><h1>Nuevo pedido</h1></div>
+
+<div class="card">
+  <form method="post">
+    <div class="formulario" style="max-width:none">
+      <div>
+        <label>Cliente *</label>
+        <select name="cliente" required>
+          <option value="">Selecciona…</option>
+          {% for c in clientes %}<option value="{{ c._id }}">{{ c.empresa }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Atiende</label>
+        <select name="empleado">
+          {% for e in empleados %}<option value="{{ e._id }}">{{ e.nombre }} {{ e.apellido }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Transportista</label>
+        <select name="transportista">
+          {% for t in transportistas %}<option>{{ t }}</option>{% endfor %}
+        </select>
+      </div>
+      <div><label>Flete</label><input name="flete" type="number" step="0.01" min="0" value="0"></div>
+    </div>
+
+    <h2 style="margin-top:26px">Productos</h2>
+    <div class="lineas" id="lineas"></div>
+    <button type="button" class="btn claro chico" id="agregar">+ Agregar producto</button>
+
+    <div class="botones">
+      <button class="btn">Crear pedido</button>
+      <a class="btn claro" href="{{ url_for('pedidos') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<template id="plantilla">
+  <div class="linea">
+    <select name="producto">
+      {% for p in productos %}<option value="{{ p._id }}">{{ p.nombre }} — {{ p.precio | dinero }}</option>{% endfor %}
+    </select>
+    <input name="cantidad" type="number" min="1" value="1" aria-label="Cantidad">
+    <button type="button" class="btn peligro chico quitar" aria-label="Quitar">✕</button>
+  </div>
+</template>
+
+<script>
+  const lineas = document.getElementById("lineas");
+  const plantilla = document.getElementById("plantilla");
+  const agregar = () => lineas.appendChild(plantilla.content.cloneNode(true));
+  document.getElementById("agregar").addEventListener("click", agregar);
+  lineas.addEventListener("click", (e) => {
+    if (e.target.classList.contains("quitar") && lineas.children.length > 1) e.target.closest(".linea").remove();
+  });
+  agregar();
+</script>
+{% endblock %}

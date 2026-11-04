@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_paginas.html" import paginas %}
+{% block titulo %}Productos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Productos</h1><p>Catálogo con categoría y proveedor</p></div>
+  <a class="btn" href="{{ url_for('producto_form') }}">Nuevo producto</a>
+</div>
+
+<form class="busqueda" method="get">
+  <input name="q" value="{{ q }}" placeholder="Buscar por nombre, categoría o proveedor">
+  <button class="btn claro">Buscar</button>
+</form>
+
+<div class="card">
+  <table class="tabla">
+    <thead><tr><th>Producto</th><th>Categoría</th><th>Proveedor</th><th class="der">Precio</th><th class="der">Existencias</th><th></th></tr></thead>
+    <tbody>
+      {% for p in docs %}
+      <tr>
+        <td><b>{{ p.nombre }}</b>{% if p.descontinuado %} <span class="etiqueta rojo">Descontinuado</span>{% endif %}
+          <div class="suave">{{ p.cantidad_por_unidad }}</div></td>
+        <td><span class="etiqueta">{{ p.categoria.nombre }}</span></td>
+        <td>{{ p.proveedor.nombre }}<div class="suave">{{ p.proveedor.pais }}</div></td>
+        <td class="der">{{ p.precio | dinero }}</td>
+        <td class="der">{{ p.existencias }}</td>
+        <td class="acciones">
+          <a class="btn claro chico" href="{{ url_for('producto_form', pid=p._id) }}">Editar</a>
+          <form method="post" action="{{ url_for('producto_eliminar', pid=p._id) }}" onsubmit="return confirm('¿Eliminar {{ p.nombre | e }}?')">
+            <button class="btn peligro chico">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="suave">Sin resultados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ paginas(pag, q, 'productos') }}
+{% endblock %}

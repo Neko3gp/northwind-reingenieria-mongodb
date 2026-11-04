@@ -1,0 +1,9 @@
+{% macro paginas(pag, q, endpoint) %}
+<div class="paginas">
+  <span>{{ pag.total }} resultado{{ '' if pag.total == 1 else 's' }} · página {{ pag.pagina }} de {{ pag.paginas }}</span>
+  <div>
+    {% if pag.pagina > 1 %}<a class="btn claro chico" href="{{ url_for(endpoint, q=q, p=pag.pagina - 1) }}">← Anterior</a>{% endif %}
+    {% if pag.pagina < pag.paginas %}<a class="btn claro chico" href="{{ url_for(endpoint, q=q, p=pag.pagina + 1) }}">Siguiente →</a>{% endif %}
+  </div>
+</div>
+{% endmacro %}
